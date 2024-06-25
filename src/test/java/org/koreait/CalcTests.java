@@ -79,6 +79,24 @@ public class CalcTests {
     void t12() {
         assertThat(Calc.run("10 + 20 + 30 - 10 + 60")).isEqualTo(110);
     }
+
+    @Test
+    @DisplayName("10 * 10 == 100")
+    void t13() {
+        assertThat(Calc.run("10 * 10")).isEqualTo(100);
+    }
+
+    @Test
+    @DisplayName("10 * -10 == -100")
+    void t14() {
+        assertThat(Calc.run("10 * -10")).isEqualTo(-100);
+    }
+
+    @Test
+    @DisplayName("10 * 10 * 10 == 1000")
+    void t15() {
+        assertThat(Calc.run("10 * 10 * 10")).isEqualTo(1000);
+    }
 }
 
 
