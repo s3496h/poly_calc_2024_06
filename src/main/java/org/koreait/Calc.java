@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 public class Calc {
     public static int run(String exp) {
 
+        // 괄호 제거
+        exp = stripOuterBrackets(exp);
+
         if (!exp.contains(" ")) {
             return Integer.parseInt(exp);
         }
@@ -13,7 +16,6 @@ public class Calc {
         boolean needToMulti = exp.contains(" * ");
         boolean needToPlus = exp.contains(" + ") || exp.contains(" - ");
         boolean needToCompound = needToMulti && needToPlus;
-
 
 
         if (needToCompound) {
@@ -53,5 +55,12 @@ public class Calc {
             return sum;
         } else
             throw new RuntimeException("해석 불가 : 올바른 계산식이 아니야");
+    }
+
+    private static String stripOuterBrackets(String exp) {
+        if (exp.charAt(0) == '(' && exp.charAt(exp.length() - 1) == ')') {
+            exp = exp.substring(1, exp.length() - 1);
+        }
+        return exp;
     }
 }
