@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class Calc {
     public static int run(String exp) {
-
+        // (20 + 20) + 20
         // 괄호 제거
         exp = stripOuterBrackets(exp);
 
@@ -16,16 +16,36 @@ public class Calc {
         boolean needToMulti = exp.contains(" * ");
         boolean needToPlus = exp.contains(" + ") || exp.contains(" - ");
         boolean needToCompound = needToMulti && needToPlus;
+        boolean needToSplit = exp.contains("(") || exp.contains(")");
 
 
-        if (needToCompound) {
+        if (needToSplit) {
+            int bracketsCount = 0;
+            int splitPointIndex = -1;
+
+            for (int i = 0; i < exp.length(); i++) {
+                if (exp.charAt(i) == '(') {
+                    bracketsCount++;
+                } else if (exp.charAt(i) == ')') {
+                    bracketsCount--;
+                }
+                if (bracketsCount == 0) {
+                    splitPointIndex = i;
+                    break;
+                }
+            }
+            String firstExp = exp.substring(0, splitPointIndex + 1);
+            String secondExp = exp.substring(splitPointIndex + 4);
+
+            return Calc.run(firstExp) + Calc.run(secondExp);
+
+        } else if (needToCompound) {
             String[] bits = exp.split(" \\+ ");
 
             //단일항이 들어오면 바로 리턴
             String newExp = Arrays.stream(bits)
 
-                    .mapToInt(Calc::run)
-                    .mapToObj(e -> e + "")
+                    .mapToInt(Calc::run).mapToObj(e -> e + "")
                     //객체가 아닌데 객체로 바꿔야할 때
                     .collect(Collectors.joining(" + "));
             return run(newExp);
@@ -53,8 +73,7 @@ public class Calc {
             }
 
             return sum;
-        } else
-            throw new RuntimeException("해석 불가 : 올바른 계산식이 아니야");
+        } else throw new RuntimeException("해석 불가 : 올바른 계산식이 아니야");
     }
 
     private static String stripOuterBrackets(String exp) {
